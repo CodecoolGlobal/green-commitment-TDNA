@@ -11,7 +11,7 @@ public class Client {
 
     public static void main(String args[]) {
         String host = "127.0.0.1";
-        int port = 8081;
+        int port = 1234;
         new Client(host, port);
     }
 
@@ -26,7 +26,7 @@ public class Client {
             BufferedReader in = null;
 
             try {
-                echoSocket = new Socket(serverHostname, 8081);
+                echoSocket = new Socket(serverHostname, 1234);
                 out = new PrintWriter(echoSocket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
             } catch (UnknownHostException e) {

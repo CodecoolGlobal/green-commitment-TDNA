@@ -8,7 +8,6 @@ public abstract class Sensor{
 
     int id;
     String type;
-    String name;
 
     public void setId(int id) {
         this.id = id;

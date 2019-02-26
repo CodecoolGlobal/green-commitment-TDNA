@@ -21,6 +21,7 @@ public class Main {
             try {
                 switch (mode) {
                     case CLIENT:
+                        Client client = new Client("127.0.0.1", 1234);
                         break;
                     case TEMPERATURE:
                         TemperatureSensor temp = new TemperatureSensor();

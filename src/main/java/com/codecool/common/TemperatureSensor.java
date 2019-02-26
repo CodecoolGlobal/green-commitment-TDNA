@@ -23,6 +23,7 @@ public class TemperatureSensor extends Sensor {
         double data = generateRandomNumber(-25.00, 40.00);
 
         doc = parser.createDocument(id, resultDate, data, type);
+
         return doc;
     }
 }
