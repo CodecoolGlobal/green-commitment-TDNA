@@ -6,10 +6,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Sensor{
 
-    private int id;
-    private String type;
-    private double value;
-    private boolean isStarted;
+    int id;
+    String type;
+    String name;
 
     public void setId(int id) {
         this.id = id;
@@ -17,6 +16,14 @@ public abstract class Sensor{
 
     public int getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getType() {
@@ -27,39 +34,13 @@ public abstract class Sensor{
         this.type = type;
     }
 
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    public void setStarted(boolean started) {
-        isStarted = started;
-    }
-
-
-    public boolean isStarted() {
-        return isStarted;
-    }
-
-    public String startStopSensor() {
-        if (isStarted) {
-            isStarted = false;
-            return id + " sensor stopped!";
-        } else {
-            isStarted = true;
-            return id + " sensor started!";
-        }
-    }
-
-    public Sensor(int id, String type, double value, boolean isStarted) {
+    public Sensor(int id, String type, String name) {
         this.id = id;
         this.type = type;
-        this.value = value;
-        this.isStarted = isStarted;
+        this.name = name;
     }
+
+    public Sensor(){}
 
     public abstract Document readData();
 

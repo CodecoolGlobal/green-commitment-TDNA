@@ -54,7 +54,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>${main.class}</mainClass>
+                            <mainClass>com.codecool.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
