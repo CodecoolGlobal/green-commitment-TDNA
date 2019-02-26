@@ -18,13 +18,6 @@ public abstract class Sensor{
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getType() {
         return type;
@@ -34,10 +27,9 @@ public abstract class Sensor{
         this.type = type;
     }
 
-    public Sensor(int id, String type, String name) {
+    public Sensor(int id, String type) {
         this.id = id;
         this.type = type;
-        this.name = name;
     }
 
     public Sensor(){}

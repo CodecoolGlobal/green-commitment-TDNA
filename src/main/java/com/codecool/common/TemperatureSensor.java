@@ -9,8 +9,7 @@ public class TemperatureSensor extends Sensor {
 
     public TemperatureSensor() {
         this.id = 300;
-        this.type = "Temperature";
-        this.name = "Temperature Sensor";
+        this.type = "Temperature sensor";
     }
 
     @Override
@@ -23,7 +22,7 @@ public class TemperatureSensor extends Sensor {
         System.out.println(resultDate);
         double data = generateRandomNumber(-25.00, 40.00);
 
-        doc = parser.createDocument(id, name, resultDate, data, type);
+        doc = parser.createDocument(id, resultDate, data, type);
         return doc;
     }
 }

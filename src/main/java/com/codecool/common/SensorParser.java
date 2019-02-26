@@ -3,6 +3,7 @@ package com.codecool.common;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -28,20 +29,31 @@ public class SensorParser {
         return null;
     }
 
-    public Document createDocument(int id, String name, Date time, double value, String type) {
+    public Document createDocument(int id, Date time, double value, String type) {
         Document document = sampleDocument();
         if (document == null) {
             System.exit(1);
         }
 
-        Element root = document.createElement("measurement");
+        Element root = document.createElement("measurements");
         root.setAttribute("id", Integer.toString(id));
-        root.setAttribute("name", name);
-        root.setAttribute("time", String.valueOf(time));
-        root.setAttribute("value", String.valueOf(value));
-        root.setAttribute("type", type);
-
         document.appendChild(root);
+
+        Element measurement = document.createElement("measurement");
+        root.appendChild(measurement);
+
+        Element timeNode = document.createElement("time");
+        timeNode.setTextContent(String.valueOf(time));
+        measurement.appendChild(timeNode);
+
+        Element valueNode = document.createElement("value");
+        valueNode.setTextContent(String.valueOf(value));
+        measurement.appendChild(valueNode);
+
+        Element typeNode = document.createElement("type");
+        typeNode.setTextContent(type);
+        measurement.appendChild(typeNode);
+
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();

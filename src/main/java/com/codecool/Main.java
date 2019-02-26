@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class Main {
     private static final String CLIENT = "CLIENT";
     private static final String SERVER = "SERVER";
-    private static final String Temperature = "Temperature";
+    private static final String TEMPERATURE = "TEMPERATURE";
 
 
     public static void main(String[] args) throws Exception {
@@ -22,7 +22,7 @@ public class Main {
                 switch (mode) {
                     case CLIENT:
                         break;
-                    case Temperature:
+                    case TEMPERATURE:
                         TemperatureSensor temp = new TemperatureSensor();
                         temp.readData();
                         break;
