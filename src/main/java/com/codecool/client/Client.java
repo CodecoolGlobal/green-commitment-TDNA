@@ -7,56 +7,57 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client {
+import java.io.*;
+import java.net.*;
+import java.util.Scanner;
 
-    public static void main(String args[]) {
-        String host = "127.0.0.1";
-        int port = 1234;
-        new Client(host, port);
-    }
+// Client class
+public class Client
+{
+    public void run() throws IOException
+    {
+        try
+        {
+            Scanner scn = new Scanner(System.in);
 
-    public Client(String host, int port) {
-        try {
-            String serverHostname = new String("127.0.0.1");
+            // getting localhost ip
+            InetAddress ip = InetAddress.getByName("localhost");
 
-            System.out.println("Connecting to host " + serverHostname + " on port " + port + ".");
+            // establish the connection with server port 5056
+            Socket s = new Socket(ip, 5057);
 
-            Socket echoSocket = null;
-            PrintWriter out = null;
-            BufferedReader in = null;
+            // obtaining input and out streams
+            DataInputStream dis = new DataInputStream(s.getInputStream());
+            DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
-            try {
-                echoSocket = new Socket(serverHostname, 1234);
-                out = new PrintWriter(echoSocket.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-            } catch (UnknownHostException e) {
-                System.err.println("Unknown host: " + serverHostname);
-                System.exit(1);
-            } catch (IOException e) {
-                System.err.println("Unable to get streams from server");
-                System.exit(1);
-            }
+            // the following loop performs the exchange of
+            // information between client and client handler
+            while (true)
+            {
+                System.out.println(dis.readUTF());
+                String tosend = scn.nextLine();
+                dos.writeUTF(tosend);
 
-            /** {@link UnknownHost} object used to read from console */
-            BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-
-            while (true) {
-                System.out.print("client: ");
-                String userInput = stdIn.readLine();
-                /** Exit on 'q' char sent */
-                if ("q".equals(userInput)) {
+                // If client sends exit,close this connection
+                // and then break from the while loop
+                if(tosend.equals("Exit"))
+                {
+                    System.out.println("Closing this connection : " + s);
+                    s.close();
+                    System.out.println("Connection closed");
                     break;
                 }
-                out.println(userInput);
-                System.out.println("server: " + in.readLine());
+
+                // printing date or time as requested by client
+                String received = dis.readUTF();
+                System.out.println(received);
             }
 
-            /** Closing all the resources */
-            out.close();
-            in.close();
-            stdIn.close();
-            echoSocket.close();
-        } catch (Exception e) {
+            // closing resources
+            scn.close();
+            dis.close();
+            dos.close();
+        }catch(Exception e){
             e.printStackTrace();
         }
     }

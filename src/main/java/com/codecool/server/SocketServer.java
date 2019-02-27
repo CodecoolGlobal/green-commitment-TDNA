@@ -1,72 +1,49 @@
 package com.codecool.server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.*;
+import java.text.*;
+import java.util.*;
+import java.net.*;
 
-public class SocketServer extends Thread {
-    public static final int PORT_NUMBER = 8081;
+// Server class 
+public class SocketServer
+{
+    public void run() throws IOException
+    {
+        // server is listening on port 5056 
+        ServerSocket ss = new ServerSocket(5057);
 
-    protected Socket socket;
+        // running infinite loop for getting 
+        // client request 
+        while (true)
+        {
+            Socket s = null;
 
-    private SocketServer(Socket socket) {
-        this.socket = socket;
-        System.out.println("New client connected from " + socket.getInetAddress().getHostAddress());
-        start();
-    }
+            try
+            {
+                // socket object to receive incoming client requests 
+                s = ss.accept();
 
-    public void run() {
-        InputStream in = null;
-        OutputStream out = null;
-        try {
-            in = socket.getInputStream();
-            out = socket.getOutputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String request;
-            while ((request = br.readLine()) != null) {
-                System.out.println("Message received:" + request);
-                request += '\n';
-                out.write(request.getBytes());
+                System.out.println("A new client is connected : " + s);
+
+                // obtaining input and out streams 
+                DataInputStream dis = new DataInputStream(s.getInputStream());
+                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+
+                System.out.println("Assigning new thread for this client");
+
+                // create a new thread object 
+                Thread t = new ClientHandler(s, dis, dos);
+
+                // Invoking the start() method 
+                t.run();
+
             }
-
-        } catch (IOException ex) {
-            System.out.println("Unable to get streams from client");
-        } finally {
-            try {
-                in.close();
-                out.close();
-                socket.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        System.out.println("SocketServer Example");
-        ServerSocket server = null;
-        try {
-            server = new ServerSocket(PORT_NUMBER);
-            while (true) {
-                /**
-                 * create a new {@link SocketServer} object for each connection
-                 * this will allow multiple client connections
-                 */
-                new SocketServer(server.accept());
-            }
-        } catch (IOException ex) {
-            System.out.println("Unable to start server.");
-        } finally {
-            try {
-                if (server != null)
-                    server.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            catch (Exception e){
+                s.close();
+                e.printStackTrace();
             }
         }
     }
 }
+

@@ -3,8 +3,7 @@ package com.codecool;
 
 import com.codecool.client.Client;
 import com.codecool.common.TemperatureSensor;
-
-import java.util.stream.Collectors;
+import com.codecool.server.SocketServer;
 
 public class Main {
     private static final String CLIENT = "CLIENT";
@@ -21,12 +20,16 @@ public class Main {
             try {
                 switch (mode) {
                     case CLIENT:
-                        Client client = new Client("127.0.0.1", 1234);
+                        Client client = new Client();
+                        client.run();
                         break;
                     case TEMPERATURE:
                         TemperatureSensor temp = new TemperatureSensor();
                         temp.readData();
                         break;
+                    case SERVER:
+                        SocketServer server = new SocketServer();
+                        server.run();
                     default:
                         System.err.println("Mode not implemented: " + mode);
                         break;
