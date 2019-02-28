@@ -17,12 +17,10 @@ public class TemperatureSensor extends Sensor {
         Document doc;
         SensorParser parser = new SensorParser();
         long yourmilliseconds = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
-        Date resultDate = new Date(yourmilliseconds);
-        System.out.println(resultDate);
-        double data = generateRandomNumber(-25.00, 40.00);
+        System.out.println(yourmilliseconds);
+        int data = generateRandomNumber(-25, 40);
 
-        doc = parser.createDocument(id, resultDate, data, type);
+        doc = parser.createDocument(id, yourmilliseconds, data, type);
 
         return doc;
     }

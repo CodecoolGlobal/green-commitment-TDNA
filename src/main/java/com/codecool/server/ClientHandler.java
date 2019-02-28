@@ -1,89 +1,57 @@
 package com.codecool.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.codecool.common.Chart;
+import com.codecool.common.SensorParser;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 // ClientHandler class
-class ClientHandler extends Thread
-{
-    DateFormat fordate = new SimpleDateFormat("yyyy/MM/dd");
-    DateFormat fortime = new SimpleDateFormat("hh:mm:ss");
-    final DataInputStream dis;
-    final DataOutputStream dos;
+class ClientHandler extends Thread {
+    final ObjectInputStream ois;
     final Socket s;
+    private SensorParser sensorParser;
+    private List<Document> listOfMeasurements = new ArrayList<>();
 
 
     // Constructor
-    public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos)
-    {
+    public ClientHandler(Socket s, ObjectInputStream ois) {
         this.s = s;
-        this.dis = dis;
-        this.dos = dos;
+        this.ois = ois;
     }
 
     @Override
-    public void run()
-    {
-        String received;
-        String toreturn;
-        while (true)
-        {
+    public void run() {
+        String type = "";
+        sensorParser = new SensorParser();
+        for(int i = 0; i<10; i++) {
+            Document receivedDoc = null;
             try {
-
-                // Ask user what he wants
-                dos.writeUTF("What do you want?[Date | Time]..\n"+
-                    "Type Exit to terminate connection.");
-
-                // receive the answer from client
-                received = dis.readUTF();
-
-                if(received.equals("Exit"))
-                {
-                    System.out.println("Client " + this.s + " sends exit...");
-                    System.out.println("Closing this connection.");
-                    this.s.close();
-                    System.out.println("Connection closed");
-                    break;
-                }
-
-                // creating Date object
-                Date date = new Date();
-
-                // write on output stream based on the
-                // answer from the client
-                switch (received) {
-
-                    case "Date" :
-                        toreturn = fordate.format(date);
-                        dos.writeUTF(toreturn);
-                        break;
-
-                    case "Time" :
-                        toreturn = fortime.format(date);
-                        dos.writeUTF(toreturn);
-                        break;
-
-                    default:
-                        dos.writeUTF("Invalid input");
-                        break;
-                }
-            } catch (IOException e) {
+                receivedDoc = (Document) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
+            sensorParser.parseDocument(receivedDoc);
+            listOfMeasurements.add(receivedDoc);
         }
 
-        try
-        {
-            // closing resources
-            this.dis.close();
-            this.dos.close();
-
-        }catch(IOException e){
+        for(Document doc : listOfMeasurements) {
+            System.out.println(doc.getDocumentElement().getAttribute("id"));
+            System.out.println(doc.getDocumentElement().getChildNodes().item(0).getChildNodes().item(0).getTextContent());
+            System.out.println(doc.getDocumentElement().getChildNodes().item(0).getChildNodes().item(1).getTextContent());
+            System.out.println(doc.getDocumentElement().getChildNodes().item(0).getChildNodes().item(2).getTextContent());
+            type = doc.getDocumentElement().getChildNodes().item(0).getChildNodes().item(2).getTextContent();
+        }
+        try {
+            Chart.run(listOfMeasurements, type);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

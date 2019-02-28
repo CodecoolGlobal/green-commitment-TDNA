@@ -12,7 +12,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.util.Date;
 
 public class SensorParser {
 
@@ -29,7 +28,7 @@ public class SensorParser {
         return null;
     }
 
-    public Document createDocument(int id, Date time, double value, String type) {
+    public Document createDocument(int id, long time, int value, String type) {
         Document document = sampleDocument();
         if (document == null) {
             System.exit(1);
@@ -64,5 +63,17 @@ public class SensorParser {
             tfe.printStackTrace();
         }
         return document;
+    }
+
+    public void parseDocument(Document document){
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(new File("test.xml"));
+            transformer.transform(source, result);
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        }
     }
 }

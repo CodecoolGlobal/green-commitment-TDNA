@@ -35,8 +35,8 @@ public abstract class Sensor{
 
     public abstract Document readData();
 
-    double generateRandomNumber(double minNumber, double maxNumber){
-        return ThreadLocalRandom.current().nextDouble(minNumber, maxNumber);
+    int generateRandomNumber(int minNumber, int maxNumber){
+        return ThreadLocalRandom.current().nextInt(minNumber, maxNumber);
     }
 
     long currentTimeMillis(){

@@ -1,8 +1,6 @@
 package com.codecool.server;
 
 import java.io.*;
-import java.text.*;
-import java.util.*;
 import java.net.*;
 
 // Server class 
@@ -11,7 +9,7 @@ public class SocketServer
     public void run() throws IOException
     {
         // server is listening on port 5056 
-        ServerSocket ss = new ServerSocket(5057);
+        ServerSocket ss = new ServerSocket(5056);
 
         // running infinite loop for getting 
         // client request 
@@ -27,13 +25,13 @@ public class SocketServer
                 System.out.println("A new client is connected : " + s);
 
                 // obtaining input and out streams 
-                DataInputStream dis = new DataInputStream(s.getInputStream());
-                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+
 
                 System.out.println("Assigning new thread for this client");
 
-                // create a new thread object 
-                Thread t = new ClientHandler(s, dis, dos);
+                // create a new thread object
+
+                Thread t = new ClientHandler(s, new ObjectInputStream(s.getInputStream()));
 
                 // Invoking the start() method 
                 t.run();
